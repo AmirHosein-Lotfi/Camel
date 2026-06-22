@@ -21,21 +21,23 @@ Each one is a normal skill folder with a `SKILL.md`. Drop the ones you want into
 
 ## Install
 
-Clone the repo, then copy whichever skill folders you want into your Claude Code skills directory.
-
-macOS / Linux:
+macOS / Linux / WSL / Git Bash:
 ```bash
-git clone https://github.com/AmirHosein-Lotfi/Camel.git
-cp -r Camel/camel Camel/camel-dam Camel/camel-pro ~/.claude/skills/
+curl -fsSL https://raw.githubusercontent.com/AmirHosein-Lotfi/Camel/main/install.sh | bash
 ```
 
 Windows (PowerShell):
 ```powershell
-git clone https://github.com/AmirHosein-Lotfi/Camel.git
-Copy-Item -Recurse Camel\camel, Camel\camel-dam, Camel\camel-pro "$HOME\.claude\skills\"
+irm https://raw.githubusercontent.com/AmirHosein-Lotfi/Camel/main/install.ps1 | iex
 ```
 
-Restart Claude Code (or start a new session) and `/camel`, `/camel-dam`, and `/camel-pro` will show up.
+Both scripts just download the repo and copy `camel`, `camel-dam`, and `camel-pro` into `~/.claude/skills/`. Set `CLAUDE_SKILLS_DIR` first if yours lives somewhere else. Restart Claude Code (or start a new session) afterward and the three commands will show up.
+
+If you'd rather not pipe a script into your shell, install manually instead:
+```bash
+git clone https://github.com/AmirHosein-Lotfi/Camel.git
+cp -r Camel/camel Camel/camel-dam Camel/camel-pro ~/.claude/skills/
+```
 
 ## What /camel stats looks like
 
