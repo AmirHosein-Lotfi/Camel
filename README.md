@@ -1,3 +1,5 @@
+_Also available in [فارسی](./README.fa.md)._
+
 # camel
 
 Three small Claude Code skills for when a session is burning more tokens than the work needs: one for sloppy file reads, one for agent and screenshot overkill, and one that stacks both and cuts harder for when the budget itself is the constraint.
