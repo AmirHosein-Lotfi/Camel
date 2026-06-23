@@ -25,6 +25,24 @@ This skill has two modes, decided by the argument it's invoked with:
 
 None of this is about being less thorough — it's about getting the same answer with less bulk sitting in context. If a full read genuinely is the right call (a 40-line config file, say), just do it; this isn't a ban on Read.
 
+## The cam filter — trim command output mechanically
+
+Rule 4 asks you to filter verbose output. `scripts/cam.js` does it deterministically so you don't have to hand-craft a pipe each time. It runs a command, then strips ANSI codes, collapses progress-bar redraws and repeated lines, drops known install/build noise, and head/tail-truncates very long logs — while always preserving lines that look like errors, including ones buried in the middle of a truncated section. It exits with the wrapped command's own exit code, so control flow is unchanged.
+
+Route any command you expect to be noisy through it — installs, test runs, builds, linters, anything that tends to spew hundreds of lines where only a few matter:
+```bash
+node <skill-dir>/scripts/cam.js -- npm test
+node <skill-dir>/scripts/cam.js -- pip install -r requirements.txt
+node <skill-dir>/scripts/cam.js --head 80 --tail 60 -- cargo build
+```
+It prints a `[cam] 464->162 lines, 65% trimmed` footer so the saving is visible. Skip it when output is already short, or pass `--raw` to keep every line but still get the ANSI/progress cleanup. This is the most reliable single token cut in the skill: a typical install or test log is mostly noise that costs tokens just by sitting in context.
+
+cam re-runs the wrapped command through a shell, which is reliable for plain token commands (`npm test`, `cargo build`, `pytest -q`, `node build.js`) — exactly the kind that produce verbose logs. It is *not* reliable for commands carrying their own shell quoting, semicolons, or pipes (e.g. an inline `node -e '...'` script), because the re-run goes through the platform's default shell and the quoting can be reinterpreted differently. Those commands are almost never the noisy ones anyway, so just run them directly without cam.
+
+## Output discipline (light — always on in frugal mode)
+
+Your own replies cost output tokens every turn, so keep them lean without going cryptic: no preamble restating the request, no "I'll now..." narration before acting, no closing summary that just repeats what the diff already shows. Prefer a short list or table over a paragraph when the content is structured, and say each thing once. This is the gentle version; `/camel-pro` pushes output compression much harder for when budget is genuinely tight.
+
 For agent-spawning and screenshot-verification restraint specifically, see the separate `/camel-dam` skill — kept apart from this one so you can turn on read/tool discipline without also damming up agents and screenshots, or vice versa.
 
 ## Checking your savings

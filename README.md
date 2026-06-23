@@ -14,12 +14,24 @@ So `camel` is a set of mode-switching skills. Type the command, the discipline a
 
 | Command | What it does |
 |---|---|
-| `/camel` | Reading and tool-call discipline: targeted Grep before Read, offset/limit instead of full files, no redundant re-reads, no dumping verbose command output into context. |
+| `/camel` | Reading and tool-call discipline: targeted Grep before Read, offset/limit instead of full files, no redundant re-reads, plus the `cam` filter for trimming verbose command output before it lands in context. |
 | `/camel stats` | Pulls real numbers from this session's own transcript: tool-call counts, how many reads were targeted vs full, files read more than once, actual token usage per turn. No estimating. |
 | `/camel-dam` | Turns off the default of spinning up subagents and taking screenshots to verify UI work. If Claude thinks a task genuinely needs delegating, it has to say so and ask first. For visual checks, it tells you what to look at instead of grabbing a screenshot itself. |
-| `/camel-pro` | Loads `/camel` and `/camel-dam` together, then goes further: no plan write-ups for routine work, reasonable assumptions instead of clarifying questions, batched verification instead of checking after every step. Anything it cuts, it has to say out loud. |
+| `/camel-pro` | Maximum cut. Loads `/camel` and `/camel-dam`, then goes further: a compressed high-density output register, `cam` on by default for noisy commands, no plan write-ups for routine work, reasonable assumptions instead of clarifying questions, batched verification. Anything it cuts, it says out loud. |
 
 Each one is a normal skill folder with a `SKILL.md`. Drop the ones you want into your skills directory and the slash commands show up.
+
+## The cam filter
+
+`/camel` ships a small command wrapper, `camel/scripts/cam.js`, that attacks the other big token sink: command output. A single `npm install` or test run can dump hundreds of lines into context where only a handful matter. cam runs the command, strips ANSI codes, collapses progress-bar redraws and repeated lines, drops known install/build noise, and head/tail-truncates very long logs, all while keeping every line that looks like an error, even ones buried in the middle. It exits with the wrapped command's own code, so nothing downstream changes.
+
+```bash
+node camel/scripts/cam.js -- npm test
+# ...trimmed output...
+# [cam] 464->162 lines, 65% trimmed (exit 0)
+```
+
+It works on plain commands (package managers, test runners, builds). For commands that carry their own shell quoting or pipes, run them directly instead, since the wrapper re-runs through a shell and the quoting can shift. Pass `--raw` to keep every line but still clean up ANSI and progress spam.
 
 ## Install
 
