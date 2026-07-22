@@ -43,7 +43,7 @@ cam re-runs the wrapped command through a shell, which is reliable for plain tok
 
 Your own replies cost output tokens every turn, so keep them lean without going cryptic: no preamble restating the request, no "I'll now..." narration before acting, no closing summary that just repeats what the diff already shows. Prefer a short list or table over a paragraph when the content is structured, and say each thing once. This is the gentle version; `/camel-pro` pushes output compression much harder for when budget is genuinely tight.
 
-For agent-spawning and screenshot-verification restraint specifically, see the separate `/camel-dam` skill — kept apart from this one so you can turn on read/tool discipline without also damming up agents and screenshots, or vice versa.
+For agent-spawning, screenshot-verification, and confirmation-only test/build runs specifically, see the separate `/camel-dam` skill — kept apart from this one so you can turn on read/tool discipline without also damming up agents, screenshots, and self-checks, or vice versa.
 
 ## Checking your savings
 
